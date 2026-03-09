@@ -77,3 +77,63 @@ public struct AsyncButton<Label: View, Indicator: View>: View {
     isExecuting = false
   }
 }
+
+public extension AsyncButton where Label == SwiftUI.Label<Text, Image> {
+  init(
+    _ titleKey: LocalizedStringKey,
+    systemImage: String,
+    role: ButtonRole? = nil,
+    indicatorStyle: IndicatorStyle = .none,
+    taskPriority: TaskPriority? = nil,
+    action: @escaping () async -> Void,
+    @ViewBuilder indicator: @escaping () -> Indicator = ProgressView.init
+  ) {
+    self.init(
+      role: role,
+      indicatorStyle: indicatorStyle,
+      taskPriority: taskPriority,
+      action: action,
+      label: { SwiftUI.Label(titleKey, systemImage: systemImage) },
+      indicator: indicator
+    )
+  }
+
+  @available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
+  init(
+    _ titleResource: LocalizedStringResource,
+    systemImage: String,
+    role: ButtonRole? = nil,
+    indicatorStyle: IndicatorStyle = .none,
+    taskPriority: TaskPriority? = nil,
+    action: @escaping () async -> Void,
+    @ViewBuilder indicator: @escaping () -> Indicator = ProgressView.init
+  ) {
+    self.init(
+      role: role,
+      indicatorStyle: indicatorStyle,
+      taskPriority: taskPriority,
+      action: action,
+      label: { SwiftUI.Label(titleResource, systemImage: systemImage) },
+      indicator: indicator
+    )
+  }
+
+  init<S>(
+    _ title: S,
+    systemImage: String,
+    role: ButtonRole? = nil,
+    indicatorStyle: IndicatorStyle = .none,
+    taskPriority: TaskPriority? = nil,
+    action: @escaping () async -> Void,
+    @ViewBuilder indicator: @escaping () -> Indicator = ProgressView.init
+  ) where S: StringProtocol {
+    self.init(
+      role: role,
+      indicatorStyle: indicatorStyle,
+      taskPriority: taskPriority,
+      action: action,
+      label: { SwiftUI.Label(String(title), systemImage: systemImage) },
+      indicator: indicator
+    )
+  }
+}
